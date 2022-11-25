@@ -1,6 +1,17 @@
 #include <iostream>
 #include<iomanip>
 #include<map>
+#include<algorithm>
+
+// Utility Function
+std::string ToLower(std::string str)
+{
+	//  Best Practice -> transform -> Algorithm
+	std::transform(std::begin(str), std::end(str), std::begin(str),
+		[](unsigned char c) { return std::tolower(c); });
+	
+	return str;
+}
 
 class ArgumentParser
 {
@@ -36,7 +47,8 @@ public:
 		{
 			for (int i = 1; i < argc; ++i)
 			{
-				std::string arg = argv[i];
+				//std::string arg = argv[i];
+				std::string arg = ToLower(argv[i]);
 
 				// Argument needs the minimum three letter
 				// "--" [0,1] and the three letter
