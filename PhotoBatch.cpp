@@ -32,7 +32,41 @@ public:
 
 	void Parse(int argc, char* argv[])
 	{
+		if (argc > 1)
+		{
+			for (int i = 1; i < argc; ++i)
+			{
+				std::string arg = argv[i];
 
+				// Argument needs the minimum three letter
+				// "--" [0,1] and the three letter
+				if (arg.length() >= 3)
+				{
+					if (arg[0] == '-' && arg[1] == '-')
+					{
+						//Remove [0,1] "--" [0,1]
+						arg = arg.substr(2);
+
+						//After arg.substr: "rename"
+						if (arg.find_first_of('-') != std::string::npos)
+						{
+							//Is option
+						}
+						else
+						{
+							// Is flag
+
+							auto flagIt = m_Flags.find(arg);
+							if (flagIt != std::end(m_Flags))
+							{
+								// We found a registered flag
+								flagIt->second = true;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 
 
@@ -43,7 +77,7 @@ private:
 
 int main(int argc, char* argv[])
 {	
-	setlocale(LC_ALL  , "portuguese");
+	setlocale(LC_ALL, "portuguese");
 	
 	ArgumentParser argParser;
 	argParser.RegisterFlag("rename");
