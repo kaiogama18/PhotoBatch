@@ -1,22 +1,12 @@
 #include "ArgumentParser.h"
-#include<algorithm> 
-
-// Utility Function
-std::string ToLower(std::string str)
-{
-	//  Best Practice -> transform -> Algorithm
-	std::transform(std::begin(str), std::end(str), std::begin(str),
-		[](unsigned char c) { return std::tolower(c); });
-
-	return str;
-}
+#include "Utils.h"
 
 void ArgumentParser::RegisterFlag(const std::string& flag)
 {
 	if (!flag.empty())
 	{
 		//Acessar um mebro do mapa --> default is false
-		m_Flags[flag] == false;
+		m_Flags[flag] = false;
 	}
 }
 
@@ -41,7 +31,7 @@ void ArgumentParser::Parse(int argc, char* argv[])
 		for (int i = 1; i < argc; ++i)
 		{
 			//std::string arg = argv[i];
-			std::string arg = ToLower(argv[i]);
+			std::string arg = Utils::ToLower(argv[i]);
 
 			// Argument needs the minimum three letter
 			// "--" [0,1] and the three letter
