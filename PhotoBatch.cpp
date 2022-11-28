@@ -1,6 +1,7 @@
 #include <iostream>
 #include<iomanip>
 #include<array>
+#include<filesystem>
 
 #include "ArgumentParser.h"
 
@@ -12,6 +13,12 @@ namespace Args
 		static constexpr const char* Convert = "convert";
 		static constexpr const char* Resize = "resize";
 		static constexpr const char* Scale = "scale";
+	}
+
+	namespace Opts
+	{
+		static constexpr const char* Folder = "folder";
+		static constexpr const char* Filter = "filter";
 	}
 }
 
@@ -32,6 +39,30 @@ void ValidadeArguments(const ArgumentParser& argParser)
 	{
 		throw std::invalid_argument("Only one mode can be activated");
 	}
+
+	//Paste Validade --> Folter
+	const std::string folder = argParser.GetOptionAs<std::string>(Args::Opts::Folder);
+
+	if( folder.empty())
+	{
+		throw std::invalid_argument("Folder cannot be blank");
+	}
+
+	if (!std::filesystem::exists(folder))
+	{
+		throw std::invalid_argument("The folder does not exist!");
+	}
+
+	//
+	const std::string filder = argParser.GetOptionAs<std::string>(Args::Opts::Filter);
+	if (!filder.empty())
+	{
+		const std::string invalidCharacters = "\\/*?\"<>|";
+		if(filder.find_first_of(invalidCharacters) != std::string::npos)
+		{
+			throw std::invalid_argument("The filter does nnot contain: " + invalidCharacters);
+		}
+	}
 }
 
 int main(int argc, char* argv[])
@@ -44,8 +75,10 @@ int main(int argc, char* argv[])
 	argParser.RegisterFlag(Args::Flags::Convert);
 	argParser.RegisterFlag(Args::Flags::Resize);
 	argParser.RegisterFlag(Args::Flags::Scale);
-	//argParser.RegisterOption("folder");
+	
+	argParser.RegisterOption(Args::Opts::Folder);
 	//argParser.RegisterOption("amount");
+	argParser.RegisterOption(Args::Opts::Filter);
 
 	argParser.Parse(argc, argv);
 
