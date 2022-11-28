@@ -66,7 +66,7 @@ void ArgumentParser::Parse(int argc, char* argv[])
 					arg = arg.substr(2);
 
 					//After arg.substr: "rename"
-					if (arg.find_first_of('-') != std::string::npos)
+					if (arg.find_first_of('=') != std::string::npos)
 					{
 						//Is option
 						const size_t equalSignPos = arg.find('=');
