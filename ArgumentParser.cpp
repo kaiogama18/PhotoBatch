@@ -69,6 +69,20 @@ void ArgumentParser::Parse(int argc, char* argv[])
 					if (arg.find_first_of('-') != std::string::npos)
 					{
 						//Is option
+						const size_t equalSignPos = arg.find('=');
+						if (equalSignPos != std::string::npos)
+						{
+							//Divide the option in key and value
+							std::string optionName = arg.substr(0, equalSignPos);
+							std::string optionValue = arg.substr(equalSignPos + 1);
+
+							auto optionIt = m_Options.find(optionName);
+							if (optionIt != std::end(m_Options))
+							{
+								// Found register option
+								optionIt->second = optionValue;
+							}
+						}
 					}
 					else
 					{
