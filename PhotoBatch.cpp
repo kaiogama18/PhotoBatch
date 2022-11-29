@@ -21,6 +21,7 @@ namespace Args
 		static constexpr const char* Filter = "filter";
 		static constexpr const char* Width = "width";
 		static constexpr const char* Height = "height";
+		static constexpr const char* Amount = "amount";
 	}
 }
 
@@ -77,7 +78,7 @@ void ValidadeArguments(const ArgumentParser& argParser)
 			width = argParser.GetOptionAs<int>(Args::Opts::Width);
 			height = argParser.GetOptionAs<int>(Args::Opts::Height);
 		}
-		catch (const std::invalid_argument& exception)
+		catch (const std::invalid_argument&)
 		{
 			throw std::invalid_argument("The entered value is not a valid number!");
 		}
@@ -95,6 +96,35 @@ void ValidadeArguments(const ArgumentParser& argParser)
 		}
 	}
 
+	// Scale Mode Validaded
+	if (bScaleMode)
+	{
+		float amount = 0.0f;
+
+		try
+		{
+			amount = argParser.GetOptionAs<float>(Args::Opts::Amount);
+		}
+		catch (const std::invalid_argument&)
+		{
+			throw std::invalid_argument("Amount value is not a valid number");
+		}
+
+
+		//In scale mode, 'amount' must be greater to be zero
+		if (amount <= 0.0f)
+		{
+			throw std::invalid_argument("Amount must be greater to be zero ");
+
+		}
+
+		if (filder.empty())
+		{
+			throw std::invalid_argument("Filter cannot be blank in mode scale");
+		}
+
+	}
+
 	
 }
 
@@ -110,7 +140,7 @@ int main(int argc, char* argv[])
 	argParser.RegisterFlag(Args::Flags::Scale);
 	
 	argParser.RegisterOption(Args::Opts::Folder);
-	//argParser.RegisterOption("amount");
+	argParser.RegisterOption(Args::Opts::Amount);
 	argParser.RegisterOption(Args::Opts::Filter);
 	argParser.RegisterOption(Args::Opts::Width);
 	argParser.RegisterOption(Args::Opts::Height);
