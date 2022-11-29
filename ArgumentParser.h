@@ -49,6 +49,16 @@ public:
 	// Passes a List of arguments in the Parser to the argv
 	void Parse(int argc, char* argv[]);
 
+	void ArgumentParser::SetHelpMessage(const std::string& helpMessage)
+	{
+		m_HelpMessage = helpMessage;
+	}
+
+	const std::string& ArgumentParser::SetHelpMessage() const
+	{
+		return m_HelpMessage;
+	}
+
 private:
 
 	// Get the read value of the option during the parser 
@@ -63,4 +73,5 @@ private:
 	// m_Falsgs --> todo nome que tem m_ -> é membro da classe
 	std::map<std::string, bool > m_Flags; //container do Sql
 	std::map<std::string, std::string> m_Options;
+	std::string m_HelpMessage;
 };

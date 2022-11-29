@@ -13,6 +13,7 @@ namespace Args
 		static constexpr const char* Convert = "convert";
 		static constexpr const char* Resize = "resize";
 		static constexpr const char* Scale = "scale";
+		static constexpr const char* Help = "help";
 	}
 
 	namespace Opts
@@ -50,6 +51,7 @@ void ValidadeArguments(const ArgumentParser& argParser)
 	const bool bConvertMode = argParser.GetFlag(Args::Flags::Convert);
 	const bool bResizeMode = argParser.GetFlag(Args::Flags::Resize);
 	const bool bScaleMode = argParser.GetFlag(Args::Flags::Scale);
+
 
 	const std::array<bool, 4> modes = { bRenameMode, bConvertMode, bResizeMode, bScaleMode };
 	const std::ptrdiff_t numActiveModes = std::count(std::begin(modes), std::end(modes), true);
@@ -189,7 +191,7 @@ void ValidadeArguments(const ArgumentParser& argParser)
 		}
 	}
 
-	
+		
 }
 
 int main(int argc, char* argv[])
@@ -204,6 +206,7 @@ int main(int argc, char* argv[])
 	argParser.RegisterFlag(Args::Flags::Convert);
 	argParser.RegisterFlag(Args::Flags::Resize);
 	argParser.RegisterFlag(Args::Flags::Scale);
+	argParser.RegisterFlag(Args::Flags::Help);
 	
 	argParser.RegisterOption(Args::Opts::Folder);
 	argParser.RegisterOption(Args::Opts::Amount);
@@ -215,19 +218,91 @@ int main(int argc, char* argv[])
 	argParser.RegisterOption(Args::Opts::From);
 	argParser.RegisterOption(Args::Opts::To);
 
+	argParser.SetHelpMessage(R"( [USO]: PhotoBatch --[Rename|Scale|Convert|Resize] [Option]
 
+    O PhotoBatch possui 4 modos de operação. Somente um modo pode estar ativo.
+    Para ativar um modo escolha uma das seguintes flags:
+
+    --Rename  : Ativa o modo para renomear arquivos
+    --Convert : Ativa o modo para converter arquivos
+    --Resize  : Ativa o modo para redimensionar arquivos
+    --Scale   : Ativa o modo para escalar arquivos
+
+As seguintes opções são comuns a todos os modos:
+    --Folder  : Especifica a pasta onde o PhotoBatch irá atuar
+    --Filter  : Especifica o filtro usado para selecionar arquivos
+
+Opções do modo Rename:
+
+    No modo Rename, cada arquivo selecionado será renomeado para o formato
+    <Prefix>_<N>.<ext>, onde <Prefix> e <N> são especificados através de opções.
+    <ext> é a extensão do arquivo que permanece inalterada.
+
+    --Prefix=<Prefix> : Prefixo usado ao renomear os arquivos
+    --StartNumber=<N> : Número inicial a ser adicionado em cada arquivo que for renomeado
+
+Opções do modo Convert:
+
+    No modo Convert, cada arquivo selecionado será convertido do formato <from> para
+    o formato <to>. <from> e <to> não podem ser iguais. O nome do arquivo permanece
+    inalterado.
+
+    --From=<jpg|png> : Extensão de origem para conversão
+    --To=<jpg|png>   : Extensão de destino para conversão
+
+Opções do modo Resize:
+
+    No modo Resize, cada arquivo selecionado será redimensionado para as dimensões
+    especificadas nas seguintes opções. Note que N >= 1.
+
+    --Width=<N>  : Novo comprimento da imagem
+    --Height=<N> : Nova altura da imagem
+
+Opções do modo Scale:
+
+    No modo Scale, cada arquivo selecionado será escalado uniformemente pelo
+    fator especificado pelas seguintes opções. Note que N > 0 e será interpretado
+    como um número em ponto flutuante.
+
+    --Amount=<N> : Fator de escala a ser aplicado em cada imagem selecionada.
+
+Exemplos de uso:
+
+    Renomear todos os arquivos da pasta "C:\Viagem" com a extensão ".png" para Viagem_N.png, onde N começa do 0
+
+	    PhotoBatch --Rename --Folder="C:\Viagem" --Filter=".png" --StartNumber=0
+
+    Redimensionar todos os arquivos na pasta "C:\Viagem" com a extensão ".jpg" para o tamanho 500x500
+
+        PhotoBatch --Resize --Folder="C:\Viagem" --Filter=".jpg" --Width=500 --Height=500
+
+    Converter todos os arquivos da pasta "C:\Viagem" de "png" para "jpg"
+
+        PhotoBatch --Convert --Folder="C:\Viagem" --From=png --To=jpg
+
+    Reduzir o pela metade o tamanho de todos os arquivos "png" da pasta "C:\Viagem"
+
+        PhotoBatch --Scale --Folder="C:\Viagem" --Filter=".png" --Amount=0.5
+)"); //String escapada
 
 	argParser.Parse(argc, argv);
 
-	try
+	if (argParser.GetFlag(Args::Flags::Help))
 	{
-		ValidadeArguments(argParser);
+		std::cout << argParser.SetHelpMessage() << std::endl;
 	}
-	catch (const std::exception& exception)
+	else
 	{
-		std::cerr << exception.what() << std::endl;
+		try
+		{
+			ValidadeArguments(argParser);
+		}
+		catch (const std::exception& exception)
+		{
+			std::cerr << exception.what() << std::endl;
+			std::cerr << "More Information use: --help";
+		}
 	}
-
 	/*
 	std::cout << std::boolalpha <<	"Rename.....: "	
 		<< argParser.GetFlag(Args::Flags::Rename) << std::endl;
