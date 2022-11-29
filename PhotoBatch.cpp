@@ -24,6 +24,9 @@ namespace Args
 		static constexpr const char* Amount = "amount";
 		static constexpr const char* Prefix = "prefix";
 		static constexpr const char* StartNumber = "startnumber";
+		static constexpr const char* From = "from";
+		static constexpr const char* To = "to";
+
 	}
 }
 
@@ -136,6 +139,7 @@ void ValidadeArguments(const ArgumentParser& argParser)
 
 	}
 
+	// Rename Mode Validaded
 	if (bRenameMode)
 	{
 
@@ -163,6 +167,52 @@ void ValidadeArguments(const ArgumentParser& argParser)
 		}
 	
 	}
+
+	// Convert Mode Validaded
+	if (bConvertMode)
+	{
+
+		try
+		{
+			//from = argParser.GetOptionAs<int>(Args::Opts::From);
+		}
+		catch (const std::invalid_argument&)
+		{
+			throw std::invalid_argument("StartNumber value is not a valid number");
+		}
+
+
+		const std::string from = argParser.GetOptionAs<std::string>(Args::Opts::From);
+		const std::string to = argParser.GetOptionAs<std::string>(Args::Opts::To);
+		const std::array<std::string, 2> convertOptions = { "jpg","png" };
+		
+		const bool bIsFromValid = std::find(std::begin(convertOptions), std::end(convertOptions), from) != std::end(convertOptions);
+		const bool bIsToValid = std::find(std::begin(convertOptions), std::end(convertOptions), to) != std::end(convertOptions);
+		
+
+		if (!bIsFromValid || !bIsToValid)
+		{
+			throw std::invalid_argument("From and To must be greater to be jpg or png");
+		}
+		if (from == to)
+		{
+			throw std::invalid_argument("From and To must be different");
+		}
+
+
+		/*
+		std::string prefix = argParser.GetOptionAs<std::string>(Args::Opts::Prefix);
+		if (startNumer < 0)
+		{
+			throw std::invalid_argument("StartNumber  must be greater to be zero");
+		}
+		if (!prefix.empty() && HasInvalidChars(prefix))
+		{
+			throw std::invalid_argument("The Prefix does not contain: " + GetInvalidChars());
+		}
+		*/
+	}
+
 	
 }
 
@@ -184,9 +234,11 @@ int main(int argc, char* argv[])
 	argParser.RegisterOption(Args::Opts::Filter);
 	argParser.RegisterOption(Args::Opts::Width);
 	argParser.RegisterOption(Args::Opts::Height);
-
 	argParser.RegisterOption(Args::Opts::Prefix);
 	argParser.RegisterOption(Args::Opts::StartNumber);
+	argParser.RegisterOption(Args::Opts::From);
+	argParser.RegisterOption(Args::Opts::To);
+
 
 
 	argParser.Parse(argc, argv);
