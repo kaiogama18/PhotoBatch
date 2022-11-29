@@ -19,6 +19,8 @@ namespace Args
 	{
 		static constexpr const char* Folder = "folder";
 		static constexpr const char* Filter = "filter";
+		static constexpr const char* Width = "width";
+		static constexpr const char* Height = "height";
 	}
 }
 
@@ -53,16 +55,47 @@ void ValidadeArguments(const ArgumentParser& argParser)
 		throw std::invalid_argument("The folder does not exist!");
 	}
 
-	//
+	//Validate if the filter is a valid string
 	const std::string filder = argParser.GetOptionAs<std::string>(Args::Opts::Filter);
 	if (!filder.empty())
 	{
-		const std::string invalidCharacters = "\\/*?\"<>|";
+		const std::string invalidCharacters = "\\/*?\"<>|:";
 		if(filder.find_first_of(invalidCharacters) != std::string::npos)
 		{
 			throw std::invalid_argument("The filter does nnot contain: " + invalidCharacters);
 		}
 	}
+
+	//Validate the Risize mode
+	if (bResizeMode)
+	{
+		int width = 0;
+		int height = 0;
+
+		try
+		{
+			width = argParser.GetOptionAs<int>(Args::Opts::Width);
+			height = argParser.GetOptionAs<int>(Args::Opts::Height);
+		}
+		catch (const std::invalid_argument& exception)
+		{
+			throw std::invalid_argument("The entered value is not a valid number!");
+		}
+
+
+
+		if (width <= 0 || height <= 0)
+		{
+			throw std::invalid_argument("Width e Height devem ser maiores que zero");
+		}
+
+		if (filder.empty())
+		{
+			throw std::invalid_argument("Filter cannot be blank in mode relize");
+		}
+	}
+
+	
 }
 
 int main(int argc, char* argv[])
@@ -79,6 +112,8 @@ int main(int argc, char* argv[])
 	argParser.RegisterOption(Args::Opts::Folder);
 	//argParser.RegisterOption("amount");
 	argParser.RegisterOption(Args::Opts::Filter);
+	argParser.RegisterOption(Args::Opts::Width);
+	argParser.RegisterOption(Args::Opts::Height);
 
 	argParser.Parse(argc, argv);
 
