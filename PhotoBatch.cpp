@@ -171,17 +171,6 @@ void ValidadeArguments(const ArgumentParser& argParser)
 	// Convert Mode Validaded
 	if (bConvertMode)
 	{
-
-		try
-		{
-			//from = argParser.GetOptionAs<int>(Args::Opts::From);
-		}
-		catch (const std::invalid_argument&)
-		{
-			throw std::invalid_argument("StartNumber value is not a valid number");
-		}
-
-
 		const std::string from = argParser.GetOptionAs<std::string>(Args::Opts::From);
 		const std::string to = argParser.GetOptionAs<std::string>(Args::Opts::To);
 		const std::array<std::string, 2> convertOptions = { "jpg","png" };
@@ -198,19 +187,6 @@ void ValidadeArguments(const ArgumentParser& argParser)
 		{
 			throw std::invalid_argument("From and To must be different");
 		}
-
-
-		/*
-		std::string prefix = argParser.GetOptionAs<std::string>(Args::Opts::Prefix);
-		if (startNumer < 0)
-		{
-			throw std::invalid_argument("StartNumber  must be greater to be zero");
-		}
-		if (!prefix.empty() && HasInvalidChars(prefix))
-		{
-			throw std::invalid_argument("The Prefix does not contain: " + GetInvalidChars());
-		}
-		*/
 	}
 
 	
