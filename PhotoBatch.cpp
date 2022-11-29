@@ -22,7 +22,22 @@ namespace Args
 		static constexpr const char* Width = "width";
 		static constexpr const char* Height = "height";
 		static constexpr const char* Amount = "amount";
+		static constexpr const char* Prefix = "prefix";
+		static constexpr const char* StartNumber = "startnumber";
 	}
+}
+
+const std::string& GetInvalidChars()
+{
+	static const std::string invalidCharacters = "\\/*?\"<>|:";
+	return invalidCharacters;
+}
+
+bool HasInvalidChars(const std::string& str)
+{
+	const bool bHasInvalidChars = str.find_first_of(GetInvalidChars()) != std::string::npos;
+	return bHasInvalidChars;
+	
 }
 
 void ValidadeArguments(const ArgumentParser& argParser)
@@ -57,14 +72,10 @@ void ValidadeArguments(const ArgumentParser& argParser)
 	}
 
 	//Validate if the filter is a valid string
-	const std::string filder = argParser.GetOptionAs<std::string>(Args::Opts::Filter);
-	if (!filder.empty())
+	const std::string filter = argParser.GetOptionAs<std::string>(Args::Opts::Filter);
+	if (!filter.empty() && HasInvalidChars(filter))
 	{
-		const std::string invalidCharacters = "\\/*?\"<>|:";
-		if(filder.find_first_of(invalidCharacters) != std::string::npos)
-		{
-			throw std::invalid_argument("The filter does nnot contain: " + invalidCharacters);
-		}
+		throw std::invalid_argument("The filter does not contain: " + GetInvalidChars());
 	}
 
 	//Validate the Risize mode
@@ -90,7 +101,7 @@ void ValidadeArguments(const ArgumentParser& argParser)
 			throw std::invalid_argument("Width e Height devem ser maiores que zero");
 		}
 
-		if (filder.empty())
+		if (filter.empty())
 		{
 			throw std::invalid_argument("Filter cannot be blank in mode relize");
 		}
@@ -118,13 +129,40 @@ void ValidadeArguments(const ArgumentParser& argParser)
 
 		}
 
-		if (filder.empty())
+		if (filter.empty())
 		{
 			throw std::invalid_argument("Filter cannot be blank in mode scale");
 		}
 
 	}
 
+	if (bRenameMode)
+	{
+
+		int startNumer = -1;
+		try
+		{
+			startNumer = argParser.GetOptionAs<int>(Args::Opts::StartNumber);
+		}
+		catch (const std::invalid_argument&)
+		{
+			throw std::invalid_argument("StartNumber value is not a valid number");
+		}
+
+		std::string prefix = argParser.GetOptionAs<std::string>(Args::Opts::Prefix);
+
+		if (startNumer < 0)
+		{
+			throw std::invalid_argument("StartNumber  must be greater to be zero");
+		}
+
+
+		if (!prefix.empty() && HasInvalidChars(prefix))
+		{
+			throw std::invalid_argument("The Prefix does not contain: " + GetInvalidChars());
+		}
+	
+	}
 	
 }
 
@@ -134,6 +172,8 @@ int main(int argc, char* argv[])
 	setlocale(LC_ALL, "en_US");
 	
 	ArgumentParser argParser;
+
+	// Register as flags do PhotoBatch
 	argParser.RegisterFlag(Args::Flags::Rename);
 	argParser.RegisterFlag(Args::Flags::Convert);
 	argParser.RegisterFlag(Args::Flags::Resize);
@@ -144,6 +184,10 @@ int main(int argc, char* argv[])
 	argParser.RegisterOption(Args::Opts::Filter);
 	argParser.RegisterOption(Args::Opts::Width);
 	argParser.RegisterOption(Args::Opts::Height);
+
+	argParser.RegisterOption(Args::Opts::Prefix);
+	argParser.RegisterOption(Args::Opts::StartNumber);
+
 
 	argParser.Parse(argc, argv);
 
