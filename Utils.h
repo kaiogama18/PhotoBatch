@@ -6,4 +6,5 @@
 namespace Utils
 {
 	std::string ToLower(std::string str);
+	bool HasWhitespaces(const std::string& str);
 }

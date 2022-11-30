@@ -3,7 +3,7 @@
 
 void ArgumentParser::RegisterFlag(const std::string& flag)
 {
-	if (!flag.empty())
+	if (!flag.empty() && !Utils::HasWhitespaces(flag))
 	{
 		//Acessar um mebro do mapa --> default is false
 		m_Flags[flag] = false;

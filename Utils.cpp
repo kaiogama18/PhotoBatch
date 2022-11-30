@@ -12,4 +12,9 @@ namespace Utils
 		
 		return str;
 	}
+
+	bool HasWhitespaces(const std::string& str)
+	{
+		return str.find(' ') != std::string::npos;
+	}
 }
