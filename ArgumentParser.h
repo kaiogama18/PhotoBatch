@@ -53,7 +53,7 @@ public:
 	}
 
 	// Passes a List of arguments in the Parser to the argv
-	void Parse(int argc, char* argv[]);
+	void Parse(int argc, const char* argv[]);
 
 	void ArgumentParser::SetHelpMessage(const std::string& helpMessage)
 	{
