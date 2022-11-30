@@ -22,6 +22,9 @@ public:
 	// Register an option to use during the parser
 	void RegisterOption(const std::string& option);
 
+	// The Flag is Registered?
+	bool IsFlagRegistered(const std::string& flag) const;
+
 	// Get a value from the Flag get during Parser
 	bool GetFlag(const std::string& flag) const;
 

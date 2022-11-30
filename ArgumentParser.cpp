@@ -123,6 +123,16 @@ void ArgumentParser::Parse(int argc, char* argv[])
 	}
 }
 
+bool ArgumentParser::IsFlagRegistered(const std::string& flag) const
+{
+	if (!flag.empty())
+	{
+		return m_Flags.count(flag) == 1;
+	}
+
+	return false;
+}
+
 // m_Falsgs --> todo nome que tem m_ -> é membro da classe
 std::map<std::string, bool > m_Flags; //container do Sql
 
