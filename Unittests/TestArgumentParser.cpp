@@ -24,9 +24,20 @@ TEST(TestArgumentParser, RegisterFlag_Whitespace)
 	argParser.RegisterFlag("My Flag");
 	EXPECT_FALSE(argParser.IsFlagRegistered("My Flag"));
 }
-/*
-TEST(MyFirstTest, ASimpleTest)
+
+TEST(TestArgumentParser, RegisterOption)
 {
-	EXPECT_TRUE(true);
+	ArgumentParser argParser;
+
+	argParser.RegisterOption("MyOption");
+
+	EXPECT_TRUE(argParser.IsOptionRegistered("MyOption"));
 }
-*/
+
+TEST(TestArgumentParser, RegisterOption_Whitespace)
+{
+	ArgumentParser argParser;
+
+	argParser.RegisterOption("My Option");
+	EXPECT_FALSE(argParser.IsOptionRegistered("My Option"));
+}

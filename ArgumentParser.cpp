@@ -12,7 +12,7 @@ void ArgumentParser::RegisterFlag(const std::string& flag)
 
 void ArgumentParser::RegisterOption(const std::string& option)
 {
-	if (!option.empty())
+	if (!option.empty() && !Utils::HasWhitespaces(option))
 	{
 		m_Options[option] = "";
 	}
@@ -132,6 +132,17 @@ bool ArgumentParser::IsFlagRegistered(const std::string& flag) const
 
 	return false;
 }
+
+bool ArgumentParser::IsOptionRegistered(const std::string& option) const
+{
+	if (!option.empty())
+	{
+		return m_Options.count(option) == 1;
+
+	}
+	return false;
+}
+
 
 // m_Falsgs --> todo nome que tem m_ -> é membro da classe
 std::map<std::string, bool > m_Flags; //container do Sql

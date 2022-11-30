@@ -25,6 +25,9 @@ public:
 	// The Flag is Registered?
 	bool IsFlagRegistered(const std::string& flag) const;
 
+	// The Option is Registered?
+	bool IsOptionRegistered(const std::string& option) const;
+
 	// Get a value from the Flag get during Parser
 	bool GetFlag(const std::string& flag) const;
 
