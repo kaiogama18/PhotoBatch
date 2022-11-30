@@ -4,6 +4,7 @@
 #include<filesystem>
 
 #include "ArgumentParser.h"
+#include "Mode.h"
 
 namespace Args
 {
