@@ -13,4 +13,10 @@ add_executable( PhotoBatch
 
 set_target_properties(PhotoBatch PROPERTIES CXX_STANDARD 17)
 
+set(FETCHCONTENT_QUEST OFF CACHE BOOL "Disabled FetchContent Mode" FORCE)
+include(FetchContent)
+
 add_subdirectory(Unittests)
+add_subdirectory(External)
+
+target_link_libraries(PhotoBatch PRIVATE stb) 

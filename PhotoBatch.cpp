@@ -4,6 +4,8 @@
 #include "ArgumentParser.h"
 #include "Mode.h"
 
+#include <stb_image.h>
+
 int main(int argc, char* argv[])
 {	
 	setlocale(LC_ALL, "portuguese");

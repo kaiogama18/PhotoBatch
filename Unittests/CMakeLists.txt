@@ -1,7 +1,6 @@
-set(FETCHCONTENT_QUEST OFF CACHE BOOL "Disabled FetchContent Mode" FORCE)
+
 set(gtest_force_shared_crt ON CACHE BOLL "" FORCE)
 
-include(FetchContent)
 FetchContent_Declare(
 	googlestest
 	GIT_REPOSITORY  https://github.com/google/googletest.git
