@@ -1,11 +1,13 @@
 #include "Mode.h"
+
 #include "ArgumentParser.h"
+#include "RenameMode.h"
 
 #include <iostream>
 #include <array>
 #include <filesystem>
+#include <chrono>
 
-#include "RenameMode.h"
 
 Mode::Mode(const std::string& filter, const std::string& folder)
 	: m_Filter{ filter }
@@ -26,7 +28,18 @@ const std::string& Mode::GetFolder() const
 
 void Mode::Run()
 {
+	using ClockT = std::chrono::high_resolution_clock;
+
+	ClockT::time_point startTime = ClockT::now();
 	RunImpl();
+	ClockT::time_point endTime = ClockT::now();
+
+	ClockT::duration elapsedTime = endTime - startTime;
+	std::chrono::milliseconds elapsedTimeMs = std::chrono::duration_cast<std::chrono::milliseconds>(elapsedTime);
+
+	std::cout << GetModeName() << "Completed Operation in: " << elapsedTimeMs.count() << " ms" << std::endl;
+
+
 }
 
 const std::string& GetInvalidChars()

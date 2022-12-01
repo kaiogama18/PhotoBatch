@@ -64,7 +64,7 @@ void RenameMode::RunImpl()
 
 		try
 		{
-			std::filesystem::rename(filepath, newFileName);
+			std::filesystem::rename(filepath, newFilepath);
 			std::cout << GetModeName() << filepath << " -> " << newFileName << std::endl;
 
 		}
