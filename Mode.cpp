@@ -2,6 +2,7 @@
 
 #include "ArgumentParser.h"
 #include "RenameMode.h"
+#include "ConvertMode.h"
 
 #include <iostream>
 #include <array>
@@ -55,18 +56,14 @@ bool HasInvalidChars(const std::string& str)
 
 }
 
-// ------------------------------------
-
 std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
 {
-
 
 	// Reading the flags that the ArgumentParser identifies
 	const bool bRenameMode = argParser.GetFlag(Args::Flags::Rename);
 	const bool bConvertMode = argParser.GetFlag(Args::Flags::Convert);
 	const bool bResizeMode = argParser.GetFlag(Args::Flags::Resize);
 	const bool bScaleMode = argParser.GetFlag(Args::Flags::Scale);
-
 
 	const std::array<bool, 4> modes = { bRenameMode, bConvertMode, bResizeMode, bScaleMode };
 	const std::ptrdiff_t numActiveModes = std::count(std::begin(modes), std::end(modes), true);
@@ -205,6 +202,13 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
 		{
 			throw std::invalid_argument("From and To must be different");
 		}
+
+		const std::map<std::string, ConvertMode::Format> convertOptionsMap = {
+			{"jpg", ConvertMode::Format::JPG},
+			{"png", ConvertMode::Format::PNG}
+		};
+
+		return std::make_unique<ConvertMode>(filter, folder, convertOptionsMap.at(from), convertOptionsMap.at(to));
 	}
 
 	return nullptr;

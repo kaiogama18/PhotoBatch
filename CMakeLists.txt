@@ -9,7 +9,11 @@ add_executable( PhotoBatch
 	"Utils.h" 
 	"Utils.cpp"
 	"RenameMode.cpp"
- "Mode.h" "Mode.cpp")
+	"Mode.h" 
+	"Mode.cpp"  
+	"ConvertMode.h" 
+	"ConvertMode.cpp"
+)
 
 set_target_properties(PhotoBatch PROPERTIES CXX_STANDARD 17)
 
