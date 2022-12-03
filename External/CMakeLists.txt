@@ -9,4 +9,5 @@ FetchContent_GetProperties(stbcontents SOURCE_DIR _stbSourceDir)
 
 
 add_library(stb INTERFACE)
+
 target_include_directories(stb INTERFACE ${_stbSourceDir})

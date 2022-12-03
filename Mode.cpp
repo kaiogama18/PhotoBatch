@@ -27,6 +27,8 @@ const std::string& Mode::GetFolder() const
 	return m_Folder;
 }
 
+
+
 void Mode::Run()
 {
 	using ClockT = std::chrono::high_resolution_clock;
@@ -42,6 +44,31 @@ void Mode::Run()
 
 
 }
+
+std::vector<std::filesystem::path> Mode::GetFiles(const std::filesystem::path& extension) const
+{
+	std::vector<std::filesystem::path> files;
+	int numSkippedFiles = 0;
+
+	//  Take every folder that matches of the especific filter 
+	for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(GetFolder()))
+	{
+		const bool bIsFile = std::filesystem::is_regular_file(entry.path());
+		const bool bMatchFilter = GetFilter().empty() || (entry.path().string().find(GetFilter()) != std::string::npos);
+		const bool bMatchExtension = extension.empty() || (entry.path().extension() == extension);
+
+		if (bIsFile && bMatchFilter)
+		{
+			files.push_back(entry.path());
+		}
+		else
+		{
+			numSkippedFiles;
+		}
+		//std::cout << entry << std::endl;
+	}
+}
+
 
 const std::string& GetInvalidChars()
 {
