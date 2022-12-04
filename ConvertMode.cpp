@@ -59,6 +59,41 @@ void ConvertMode::RunImpl()
 
 	for (const std::filesystem::path& filepath : GetFiles(fromExtension))
 	{
-		std::cout << GetModeName() << filepath << std::endl;
+		std::cout << GetModeName() << "Convert: " << filepath << std::endl;
+
+		int width = 0;
+		int height = 0;
+		int numComp = 0;
+		const int numReqComp = 3;
+
+		if (unsigned char* data = stbi_load(filepath.string().c_str(), &width, &height, &numComp, numReqComp))
+		{
+			std::filesystem::path destFilepath = filepath;
+			destFilepath.replace_extension(ToString(m_ToFormat));
+
+			int writeResult = 0;
+			switch (m_ToFormat)
+			{
+			case Format::PNG:
+				writeResult = stbi_write_png(destFilepath.string().c_str(), width, height, numComp, data, 0);
+				break;
+			case Format::JPG:
+				writeResult = stbi_write_jpg(destFilepath.string().c_str(), width, height, numComp, data, 50);
+				break;
+			default:
+				break;
+			}
+
+			if (writeResult == 0)
+			{
+				std::cout << GetModeName() << "Error to conect! " << filepath << std::endl;
+			}
+
+			stbi_image_free(data);
+		}
+		else
+		{
+			std::cout << GetModeName() << " Error Connecting " << filepath << std::endl;
+		}
 	}
 }
