@@ -4,11 +4,6 @@
 #include "ArgumentParser.h"
 #include "Mode.h"
 
-
-
-
-
-
 int main(int argc, char* argv[])
 {	
 	setlocale(LC_ALL, "portuguese");
