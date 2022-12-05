@@ -4,6 +4,7 @@
 #include "RenameMode.h"
 #include "ConvertMode.h"
 #include "ResizeMode.h"
+#include "ScaleMode.h"
 
 #include <iostream>
 #include <array>
@@ -185,6 +186,8 @@ std::unique_ptr<Mode> CreateMode(const ArgumentParser& argParser)
 		{
 			throw std::invalid_argument("Filter cannot be blank in mode scale");
 		}
+
+		return std::make_unique<ScaleMode>(filter, folder, amount);
 
 	}
 

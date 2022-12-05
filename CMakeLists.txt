@@ -15,6 +15,8 @@ add_executable( PhotoBatch
 	"ConvertMode.cpp"
 	"ResizeMode.h"
 	"ResizeMode.cpp"
+	"ScaleMode.h" 
+	"ScaleMode.cpp"
 )
 
 set_target_properties(PhotoBatch PROPERTIES CXX_STANDARD 17)
